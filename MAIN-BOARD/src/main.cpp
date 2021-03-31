@@ -50,8 +50,7 @@ void loop() {
 
 
 void readSerialBluetooth(){
-	Serial.println(Serial.readString());
-	
+	// Serial.println(Serial.readString());
 	if (Serial.available() < 7)  // 1 Byte First Char + 4 Bytes Float
 		return;
   
@@ -60,7 +59,7 @@ void readSerialBluetooth(){
 	if(firstChar == TEMPERATURE_SIGNAL) {
 		float oldTemperature = currentTemperature;
 		currentTemperature = Serial.parseFloat();
-		if(currentTemperature != oldTemperature)
+    if(currentTemperature != oldTemperature)
 			sensorsValuesHaveChanged = true;
 	}
 	else if(firstChar == HUMIDITY_SIGNAL) {
