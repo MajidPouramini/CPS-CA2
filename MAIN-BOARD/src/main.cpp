@@ -5,11 +5,12 @@
 #include <LiquidCrystal.h>
 #include <Wire.h>
 
-#define TEMP_START_CHAR 'T'
-#define Humidity_START_CHAR 'H'
+#define TEMPERATURE_SIGNAL 'T'
+#define HUMIDITY_SIGNAL 'H'
 #define MAX_PWM 255
-#define MOTOR_PIN1 9
-#define MOTOR_PIN2 10
+#define MOTOR_IN1 13
+#define MOTOR_IN2 12
+#define MOTOR_EN 11
 
 void readSerialBluetooth();
 void process();
@@ -35,6 +36,10 @@ void setup() {
 void loop() {
 	readSerialBluetooth();
 
+	// Serial.println("Salam: ");
+	// Serial.println(currentTemperature);
+	// Serial.println(currentHumidity);
+
 	if(sensorsValuesHaveChanged) {
 		process();
 		updatePWM();
@@ -45,26 +50,27 @@ void loop() {
 
 
 void readSerialBluetooth(){
-	if (Serial.available() < 5)  // 1 Byte First Char + 4 Bytes Float
+	Serial.println(Serial.readString());
+	
+	if (Serial.available() < 7)  // 1 Byte First Char + 4 Bytes Float
 		return;
   
 	char firstChar = Serial.read();
 
-	if(firstChar == TEMP_START_CHAR) {
+	if(firstChar == TEMPERATURE_SIGNAL) {
 		float oldTemperature = currentTemperature;
 		currentTemperature = Serial.parseFloat();
 		if(currentTemperature != oldTemperature)
 			sensorsValuesHaveChanged = true;
 	}
-	else if(firstChar == Humidity_START_CHAR) {
+	else if(firstChar == HUMIDITY_SIGNAL) {
 		float oldHumidity = currentHumidity;
 		currentHumidity = Serial.parseFloat();
 		if(currentHumidity != oldHumidity)
 			sensorsValuesHaveChanged = true;
 	}
-	else {  // Data is not right
-		Serial.read();
-	}
+
+	Serial.read();
 }
 
 
@@ -91,8 +97,8 @@ void process() {
 
 
 void updatePWM() {
-	analogWrite(MOTOR_PIN1, wateringAmountPWM);
-	analogWrite(MOTOR_PIN2, 0);
+	analogWrite(MOTOR_IN1, wateringAmountPWM);
+	analogWrite(MOTOR_IN2, 0);
 }
 
 

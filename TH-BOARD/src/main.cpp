@@ -11,8 +11,6 @@ void setup()
 
 void loop()
 {
-  Serial.println("-------------------------");
-
   unsigned int data[2];
 
   Wire.beginTransmission(SHT25_ADDR);
@@ -32,9 +30,8 @@ void loop()
     // Convert the data
     float humidity = (((data[0] * 256.0 + data[1]) * 125.0) / 65536.0) - 6;
     // Output data to Serial Monitor
-    Serial.print("Relative Humidity :");
-    Serial.print(humidity);
-    Serial.println(" %RH");
+    Serial.print("H");
+    Serial.println(humidity);
   }
   // put your main code here, to run repeatedly:
 
@@ -53,18 +50,15 @@ void loop()
   {
     data[0] = Wire.read();
     data[1] = Wire.read();
+  
     // Convert the data
     float cTemp = (((data[0] * 256.0 + data[1]) * 175.72) / 65536.0) - 46.85;
-    float fTemp = (cTemp * 1.8) + 32;
+  
     // Output data to Serial Monitor
-    Serial.print("Temperature in Celsius :");
-    Serial.print(cTemp);
-    Serial.println(" C");
-    Serial.print("Temperature in Fahrenheit :");
-    Serial.print(fTemp);
-    Serial.println(" F");
-
-    // send every 5 second
-    delay(5000);
+    Serial.print("T");
+    Serial.println(cTemp);
   }
+
+  // send every 5 second
+  delay(5000);
 }
