@@ -11,14 +11,20 @@ void setup()
 
 void loop()
 {
+  Serial.println("-------------------------");
+
   unsigned int data[2];
 
   Wire.beginTransmission(SHT25_ADDR);
   Wire.write(0xF5);
   Wire.endTransmission();
+
+  delay(500);
+
   Wire.requestFrom(SHT25_ADDR, 2);
   // Read 2 bytes of data
   // humidity msb, humidity lsb
+
   if (Wire.available() == 2)
   {
     data[0] = Wire.read();
@@ -37,6 +43,7 @@ void loop()
   Wire.write(0xF3);
   // Stop I2C transmission
   Wire.endTransmission();
+
   delay(500);
   // Request 2 bytes of data
   Wire.requestFrom(SHT25_ADDR, 2);
